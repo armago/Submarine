@@ -55,17 +55,17 @@ void translateIR() {          // takes action based on IR code received
     case 0xFFA857: Serial.println("VOL-");    break;
     case 0xFF906F: Serial.println("UP");   x+= 1; break;
     case 0xFF9867: Serial.println("EQ");   pump(x); x=0; break;
-    case 0xFFB04F: Serial.println("ST/REPT"); fill(x); x=0;    break;
+    case 0xFFB04F: Serial.println("ST/REPT");Serial.println(x); x=0; fill(x); break;
     case 0xFF6897: Serial.println("0");    break;
-    case 0xFF30CF: Serial.println("1");    break;
-    case 0xFF18E7: Serial.println("2");    break;
-    case 0xFF7A85: Serial.println("3");    break;
-    case 0xFF10EF: Serial.println("4");    break;
-    case 0xFF38C7: Serial.println("5");    break;
-    case 0xFF5AA5: Serial.println("6");    break;
-    case 0xFF42BD: Serial.println("7");    break;
-    case 0xFF4AB5: Serial.println("8");    break;
-    case 0xFF52AD: Serial.println("9");    break;
+    case 0xFF30CF: Serial.println("1");  x+=10;  break;
+    case 0xFF18E7: Serial.println("2");  x+=20;  break;
+    case 0xFF7A85: Serial.println("3"); x+=30;   break;
+    case 0xFF10EF: Serial.println("4"); x+=40;   break;
+    case 0xFF38C7: Serial.println("5"); x+=50;   break;
+    case 0xFF5AA5: Serial.println("6"); x+=60;   break;
+    case 0xFF42BD: Serial.println("7"); x+=70;   break;
+    case 0xFF4AB5: Serial.println("8"); x+=80;   break;
+    case 0xFF52AD: Serial.println("9"); x+=90;   break;
     case 0xFFFFFFFF: Serial.println(" REPEAT");break;  
 
   default: 
