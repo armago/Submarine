@@ -19,7 +19,6 @@ void fill(int fillTime) {
   }
 
 void pump(int pumpTime){
-  Serial.print(pumpTime);
   int y = 1000*pumpTime;
    for (int i=0; i<=pumpTime; i++){
     digitalWrite(7, HIGH);
@@ -31,35 +30,31 @@ void pump(int pumpTime){
   delay(y);
   digitalWrite(5, LOW);
   delay(60000);
-  Serial.println("Stage 1");
   digitalWrite(9, HIGH);
-  Serial.println("Stage 2");
   delay(30000);
   digitalWrite(9, LOW);
-  Serial.println("Stage 3");
   }/*-----( Function )-----*/
 void translateIR() {          // takes action based on IR code received
 // describing Remote IR codes 
 
   switch(results.value){
-    case 0xFF9867: Serial.println("EQ");   break; pump(totalseconds); totalseconds=0;
-    case 0xFFB04F: Serial.println("ST/REPT");   break; fill(totalseconds); totalseconds=0;
-    case 0xFF906F: Serial.println("UP");   totalseconds+= 1; break;
-    case 0xFF6897: Serial.println("0");    break;
-    case 0xFF30CF: Serial.println("1");  totalseconds+=10;  break;
-    case 0xFF18E7: Serial.println("2");  totalseconds+=20;  break;
-    case 0xFF7A85: Serial.println("3"); totalseconds+=30;   break;
-    case 0xFF10EF: Serial.println("4"); totalseconds+=40;   break;
-    case 0xFF38C7: Serial.println("5"); totalseconds+=50;   break;
-    case 0xFF5AA5: Serial.println("6"); totalseconds+=60;   break;
-    case 0xFF42BD: Serial.println("7"); totalseconds+=70;   break;
-    case 0xFF4AB5: Serial.println("8"); totalseconds+=80;   break;
-    case 0xFF52AD: Serial.println("9"); totalseconds+=90;   break;
-    case 0xFFFFFFFF: Serial.println(" REPEAT");break;  
+    case 0xFF9867:   break; pump(totalseconds); totalseconds=0;
+    case 0xFFB04F:   break; fill(totalseconds); totalseconds=0;
+    case 0xFF906F:    totalseconds+= 1; break;
+    case 0xFF6897:    break;
+    case 0xFF30CF:   totalseconds+=10;  break;
+    case 0xFF18E7:   totalseconds+=20;  break;
+    case 0xFF7A85:  totalseconds+=30;   break;
+    case 0xFF10EF:  totalseconds+=40;   break;
+    case 0xFF38C7:  totalseconds+=50;   break;
+    case 0xFF5AA5:  totalseconds+=60;   break;
+    case 0xFF42BD:  totalseconds+=70;   break;
+    case 0xFF4AB5:  totalseconds+=80;   break;
+    case 0xFF52AD:  totalseconds+=90;   break;
+    case 0xFFFFFFFF: break;  
 
   default: 
-    Serial.print(" other button   ");
-    Serial.println(results.value);
+    
 
   }// End Case
 
@@ -69,8 +64,6 @@ void translateIR() {          // takes action based on IR code received
 void setup(){   /*----( SETUP: RUNS ONCE )----*/
   pinMode(5, OUTPUT);
   pinMode(9, OUTPUT);
-  Serial.begin(9600);
-  Serial.println("IR Receiver Button Decode"); 
   irrecv.enableIRIn();           // Start the receiver
 
 }/*--(end setup )---*/
@@ -83,6 +76,5 @@ void loop(){   /*----( LOOP: RUNS CONSTANTLY )----*/
     delay(500);
     irrecv.resume();
   }  
-  Serial.println(totalseconds);
 
 }/* --(end main loop )-- */
