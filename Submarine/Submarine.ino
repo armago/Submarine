@@ -20,12 +20,6 @@ void fill(int fillTime) {
 
 void pump(int pumpTime){
   int y = 1000*pumpTime;
-   for (int i=0; i<=pumpTime; i++){
-    digitalWrite(7, HIGH);
-    delay(1000);
-    digitalWrite(7, LOW);
-    delay(1000);
-    }
   digitalWrite(5, HIGH);
   delay(y);
   digitalWrite(5, LOW);
@@ -38,8 +32,8 @@ void translateIR() {          // takes action based on IR code received
 // describing Remote IR codes 
 
   switch(results.value){
-    case 0xFF9867:   break; pump(totalseconds); totalseconds=0;
-    case 0xFFB04F:   break; fill(totalseconds); totalseconds=0;
+    case 0xFF9867:   pump(totalseconds); totalseconds=0;  break;
+    case 0xFFB04F:    fill(totalseconds); totalseconds=0; break;
     case 0xFF906F:    totalseconds+= 1; break;
     case 0xFF6897:    break;
     case 0xFF30CF:   totalseconds+=10;  break;
@@ -54,7 +48,7 @@ void translateIR() {          // takes action based on IR code received
     case 0xFFFFFFFF: break;  
 
   default: 
-    
+    digitalWrite(6, HIGH);
 
   }// End Case
 
