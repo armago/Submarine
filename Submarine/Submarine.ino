@@ -29,7 +29,7 @@ void pump(int pumpTime){
   digitalWrite(5, HIGH);
   delay(y);
   digitalWrite(5, LOW);
-  delay(60000);
+  delay(45000);
   digitalWrite(9, HIGH);
   delay(30000);
   digitalWrite(9, LOW);
