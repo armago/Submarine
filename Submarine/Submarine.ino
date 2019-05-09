@@ -1,50 +1,51 @@
-#include "IRremote.h"
+#include "IRremote.h"       // Library for IR Transmitter and Reciever
 
-/*-----( Global Constants )-----*/
-const int receiver = 11;      // Signal Pin of IR receiver to Arduino Digital Pin 11
-int totalseconds = 0;
-/*-----( Declare objects )-----*/
-IRrecv irrecv(receiver);     // create instance of 'irrecv'
-decode_results results;      // create instance of 'decode_results'
-void fill(int fillTime) {
-  digitalWrite(5, HIGH);
+const int receiver = 3;      // Signal Pin of IR receiver to Arduino Pin 3
+int totalseconds = 0;       // Variable for run time of pumps
+int emptyPin = 11;          // Signal Pin from Arduino Pin 11 to Empty Pump
+int fillPin = 12;           // Signal Pin from Arduino Pin 12 to Fill Pump
+
+IRrecv irrecv(receiver);     // Create instance of 'irrecv'
+decode_results results;      // Create instance of 'decode_results'
+void fill(int fillTime) {    // Function to fill tanks
+  digitalWrite(fillPin, HIGH);
   delay(fillTime*1000);
-  digitalWrite(5, LOW);
- }
+  digitalWrite(fillPin, LOW);
+ } // End Fill Function
 
- void empty(int emptyTime) {
-  digitalWrite(9, HIGH);
+ void empty(int emptyTime) { // Function to empty tanks
+  digitalWrite(emptyPin, HIGH);
   delay(emptyTime*1000);
-  digitalWrite(9, LOW);
-  }
+  digitalWrite(emptyPin, LOW);
+  } // End Empty Function
 
-void pump(int pumpTime){
-  int y = 1000*pumpTime;
-  digitalWrite(5, HIGH);
-  delay(y);
-  digitalWrite(5, LOW);
+void pump(int pumpTime){     // Function to fill tank, wait, then empty tank
+  digitalWrite(fillPin, HIGH);
+  delay(1000*pumpTime);
+  digitalWrite(fillPin, LOW);
   delay(45000);
-  digitalWrite(9, HIGH);
+  digitalWrite(emptyPin, HIGH);
   delay(30000);
-  digitalWrite(9, LOW);
-  }/*-----( Function )-----*/
-void translateIR() {          // takes action based on IR code received
+  digitalWrite(emptyPin, LOW);
+  } // End Pump Function
+void translateIR() {          // Interprets IR signal and takes action
 // describing Remote IR codes 
 
   switch(results.value){
-    case 0xFF9867:   pump(totalseconds); totalseconds=0;  break;
-    case 0xFFB04F:    fill(totalseconds); totalseconds=0; break;
+    case 0xFF9867:   pump(totalseconds); totalseconds=0;  break;//eq button
+    case 0xFF02FD: empty(totalseconds); totalseconds = 0; break; //pause button
+    case 0xFFB04F:    fill(totalseconds); totalseconds=0; break; //st/rept button
     case 0xFF906F:    totalseconds+= 1; break;
     case 0xFF6897:    break;
-    case 0xFF30CF:   totalseconds+=10;  break;
-    case 0xFF18E7:   totalseconds+=20;  break;
-    case 0xFF7A85:  totalseconds+=30;   break;
-    case 0xFF10EF:  totalseconds+=40;   break;
-    case 0xFF38C7:  totalseconds+=50;   break;
-    case 0xFF5AA5:  totalseconds+=60;   break;
-    case 0xFF42BD:  totalseconds+=70;   break;
-    case 0xFF4AB5:  totalseconds+=80;   break;
-    case 0xFF52AD:  totalseconds+=90;   break;
+    case 0xFF30CF:   totalseconds+=10;  break; // 1
+    case 0xFF18E7:   totalseconds+=20;  break; // 2
+    case 0xFF7A85:  totalseconds+=30;   break; // 3
+    case 0xFF10EF:  totalseconds+=40;   break; // 4
+    case 0xFF38C7:  totalseconds+=50;   break; // 5
+    case 0xFF5AA5:  totalseconds+=60;   break; // 6
+    case 0xFF42BD:  totalseconds+=70;   break; // 7
+    case 0xFF4AB5:  totalseconds+=80;   break; // 8
+    case 0xFF52AD:  totalseconds+=90;   break; // 9
     case 0xFFFFFFFF: break;  
 
   default: 
@@ -52,23 +53,23 @@ void translateIR() {          // takes action based on IR code received
 
   }// End Case
 
-} //END translateIR
+} //End translateIR
 
 
-void setup(){   /*----( SETUP: RUNS ONCE )----*/
-  pinMode(5, OUTPUT);
-  pinMode(9, OUTPUT);
+void setup(){  // Start Setup
+  pinMode(fillPin, OUTPUT);      // Enable pin for Fill Pump
+  pinMode(emptyPin, OUTPUT);     // Enable pin for Empty Pump
   irrecv.enableIRIn();           // Start the receiver
 
-}/*--(end setup )---*/
+} // End Setup
 
-void loop(){   /*----( LOOP: RUNS CONSTANTLY )----*/
+void loop(){   
  
-  if (irrecv.decode(&results))   // have we received an IR signal?
+  if (irrecv.decode(&results))   // Checks for IR signal
   {
     translateIR();
     delay(500);
     irrecv.resume();
   }  
 
-}/* --(end main loop )-- */
+} // End Loop
